@@ -27,7 +27,10 @@
                 <td class="px-4 py-2 border">{{$exp->id}}</td>
                 <td class="px-4 py-2 border">{{$exp->description}}</td>
                 <td class="px-4 py-2 border">R$ {{number_format($exp->amount, 2, ',', '.')}}</td>
-                <td class="px-4 py-2 border">{{$exp->created_at->format('d/m/Y H:i:s')}}</td>
+                <td class="px-4 py-2 border">{{$exp->expense_date ? 
+                    $exp->expense_date->format('d/m/Y H:i:s') : 
+                    $exp->created_at->format('d/m/Y H:i:s')}}
+                </td>
                 <td class="px-4 py-4 border">
                     <a href="{{route('expenses.edit', $exp->id)}}" class="px-4 py-2 border rounded bg-blue-500 text-white">Editar</a>
                     <a href="#" wire:click.prevent="remove({{$exp->id}})"

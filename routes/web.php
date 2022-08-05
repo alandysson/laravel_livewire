@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use \App\Models\Expense;
+use \Illuminate\Support\Facades\{Storage, File};
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,5 +38,15 @@ Route::middleware([
         Route::get('/', ExpenseList::class)->name('index');
         Route::get('/create', ExpenseCreate::class)->name('create');
         Route::get('/edit/{expense}', ExpenseEdit::class)->name('edit');
+        Route::get('/{expense}/photo', function ($expense) {
+            $expense = auth()->user()->expenses()->findOrFail($expense);
+            if(!Storage::disk('public')->get($expense->photo)){
+                return abort(404, 'Image not found!');
+            }
+            $image = Storage::disk('public')->get($expense->photo);
+            $mimeType = File::mimeType(storage_path('app/public/'.$expense->photo));
+            return response($image)->header('Content-type', $mimeType);
+
+        })->name('photo');
     });
 });
